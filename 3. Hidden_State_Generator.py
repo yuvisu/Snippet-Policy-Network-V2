@@ -174,9 +174,9 @@ if __name__ == "__main__":
 
             train_val_label, testing_label = Y[train_val_index], Y[test_index]
         
-            training_index, testing_index = I[train_index], I[test_index]
+            training_index, testing_index = I[train_val_index], I[test_index]
 
-            training_length, testing_length = L[train_index], L[test_index]
+            training_length, testing_length = L[train_val_index], L[test_index]
 
         
         print("processing: ", seed)
