@@ -12,6 +12,7 @@ class snippet_cnnlstm(nn.Module):
                  hidden_output_size = 1, 
                  output_size = 9, 
                  core_model ="CNNLSTM",
+                 fc_size = 4,
                  isCuda = True):
 
         super(snippet_cnnlstm, self).__init__()
@@ -27,7 +28,7 @@ class snippet_cnnlstm(nn.Module):
         # --- Backbones ---
         print(core_model)
         
-        self.BaseCNN = BaseCNN(input_size, hidden_size, output_size).cuda()
+        self.BaseCNN = BaseCNN(input_size, hidden_size, output_size, fc_size = fc_size).cuda()
         self.BaseRNN = BaseRNN(hidden_size, hidden_size, self.CELL_TYPE).cuda()
         self.Discriminator = Discriminator(hidden_size, output_size).cuda()
         

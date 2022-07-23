@@ -284,9 +284,9 @@ if __name__ == "__main__":
 
     for seed in range(1, 2):
                 
-        config = Config(seed = seed,message ="20210522-ogk-cursoft-punish1-trueidx-trainfake-testtrue",
+        config = Config(seed = seed,message ="{Setting a mark}",
                         population_size=500,output_size=9,learning_rate=0.01,
-                        model_name="KGNA-NO-Pre",state_model_name="CNNLSTM",dataset_name="ICBEB")
+                        model_name="CNNLSTM",state_model_name="CNNLSTM",dataset_name="ICBEB")
 
         state_path = os.path.join(config.root_dir,
                                   config.output_dir,
@@ -331,7 +331,7 @@ if __name__ == "__main__":
             
             weight_dict = uio.load_pkfile(weight_path+"/"+config.weight_name)
 
-            pretrained = None#np.concatenate((weight_dict['weight'].flatten(),weight_dict['bias']))
+            pretrained = np.concatenate((weight_dict['weight'].flatten(),weight_dict['bias']))
             
         data_dict = uio.load_state_data(
             state_path+"/"+config.state_name)

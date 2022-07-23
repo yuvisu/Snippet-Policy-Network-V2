@@ -4,9 +4,11 @@ import torch.nn as nn
 import torch.nn.functional as F
 
 class BaseCNN(nn.Module):
-    def __init__(self, input_size, hidden_size, num_classes):
+    def __init__(self, input_size, hidden_size, num_classes, fc_size = 4):
         super(BaseCNN, self).__init__()
-    
+        
+        self.fc_size = fc_size
+        
         self.conv= nn.Conv1d(in_channels=input_size, out_channels=64, kernel_size=5,stride=1)
         
         self.conv_pad_1_64 =  nn.Sequential(
@@ -86,12 +88,11 @@ class BaseCNN(nn.Module):
 
         # *4 for the series length 1000
         # *2 for the series length 500
-        self.dense1 = nn.Linear(512 * 4, 1024)
+        self.dense1 = nn.Linear(512 * self.fc_size, 1024)
         self.dense2 = nn.Linear(1024, hidden_size)
         
-        self.dense_final = nn.Linear(hidden_size, num_classes)
-        #self.softmax= nn.LogSoftmax(dim=1)
-
+        self.dense_final = nn.Linear(hidden_size, num_classes) #no use
+        
     def forward(self, x):
         #print(x.shape)
         x = x.permute(0,2,1)
@@ -121,7 +122,7 @@ class BaseCNN(nn.Module):
 
         # *4 for the series length 1000
         # *2 for the series length 500
-        x = x.view(-1, 512 * 4) #Reshape (current_dim, 32*2)
+        x = x.view(-1, 512 * self.fc_size)
         #print(x.shape)
         x = self.dense1(x)
         #print(x.shape)

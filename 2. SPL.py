@@ -22,7 +22,8 @@ def execute(config, train_X, train_Y, test_X, test_Y, val_X = None, val_Y=None, 
                             hidden_size=config.hidden_size,
                             hidden_output_size=config.hidden_output_size,
                             output_size=config.output_size,
-                            core_model = config.model_name)
+                            core_model = config.model_name,
+                           fc_size = config.fc_size)
     
     model.cuda()
 
@@ -192,7 +193,7 @@ if __name__ == "__main__":
 
         config = Config(message="20210518-Original-K-fold-[step20]",epoch_size=50, model_name="CNNLSTM-500" ,
                         dataset_name = "ptbxl", output_size = 5,
-                        seed=seed, snippet_name = "christov_500_checkup.pickle")
+                        seed=seed, snippet_name = "christov_500_checkup.pickle", fc_size = 2)
 
         input_folder = os.path.join(config.root_dir,
                                 config.data_dir,
@@ -267,7 +268,8 @@ if __name__ == "__main__":
             training_label, val_label = train_val_label[train_index], train_val_label[val_index]
                 
                 
-        '''
+        ''' 
+        # if setting a validation set
         result_model = execute(config, 
                                training_data, 
                                training_label, 

@@ -40,7 +40,7 @@ def execute(config, pretrained_model, train_X, train_Y, test_X, test_Y, train_I,
 
         train_state.append(np.array(state))
         
-        train_index.append(train_I[idx]+249)
+        train_index.append(train_I[idx]+config.time_offset)
 
     test_state = []
     
@@ -53,7 +53,7 @@ def execute(config, pretrained_model, train_X, train_Y, test_X, test_Y, train_I,
 
         test_state.append(np.array(state))
         
-        test_index.append(test_I[idx]+249)
+        test_index.append(test_I[idx]+config.time_offset)
 
     train_state = np.array(train_state)
     test_state = np.array(test_state)
@@ -67,7 +67,9 @@ def get_weight(config, pretrained_model):
                             hidden_size=config.hidden_size,
                             hidden_output_size=config.hidden_output_size,
                             output_size=config.output_size,
-                            core_model = config.model_name)
+                            core_model = config.model_name,
+                           fc_size = config.fc_size
+                           )
 
     model.load_state_dict(torch.load(pretrained_model))
     
@@ -96,7 +98,9 @@ if __name__ == "__main__":
         config = Config(dataset_name = "ptbxl", 
                         output_size = 5, 
                         model_name = "CNNLSTM-500",
-                        snippet_name = "christov_500_checkup.pickle")
+                        snippet_name = "christov_500_checkup.pickle",
+                       fc_size = 2,
+                       time_offset = 249)
         
         print("Here:", config.model_name)
         
