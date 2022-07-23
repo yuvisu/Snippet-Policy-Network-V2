@@ -11,8 +11,6 @@ from sklearn.model_selection import StratifiedShuffleSplit, StratifiedKFold
 from core.loss import FocalLoss
 from configs.backbone_config import Config
 from models.snippet_cnnlstm import snippet_cnnlstm
-#import mkl
-#mkl.set_num_threads(3)
 torch.set_num_threads(3)
 
 def execute(config, pretrained_model, train_X, train_Y, test_X, test_Y, train_I, test_I, train_L, test_L):

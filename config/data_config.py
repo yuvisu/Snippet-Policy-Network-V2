@@ -7,7 +7,7 @@ class DataConfig():
 
     sampling_rate = 500
 
-    segmenter: str = "gamboa"
+    segmenter: str = "christov"
     
     # path
     root_dir: str = ""

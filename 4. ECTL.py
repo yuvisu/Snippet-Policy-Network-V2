@@ -10,7 +10,7 @@ import models.kg_policynet as kgpn
 
 from core.loss import SGD
 from core.utils import *
-from configs.kgea_config import Config
+from configs.kgna_config import Config
 
 
 def is_better(a, b):

@@ -21,29 +21,15 @@ class snippet_cnnlstm(nn.Module):
         self.HIDDEN_SIZE = hidden_size
         self.HIDDEN_OUTPUT_SIZE = hidden_output_size
         self.OUTPUT_SIZE = output_size
-        self.CORE = core_model
+        self.CORE = core_model # A mark to identify the baseline model is trained on the snippet length 500 or 1000
         self.isCuda = isCuda
 
         # --- Backbones ---
-        
         print(core_model)
         
-        if (core_model == "D3CNN"):
-            self.BaseCNN = D3CNN(input_size, hidden_size, hidden_output_size, output_size)
-        elif(core_model == "HeartNetIEEE"):
-            self.BaseCNN = HeartNetIEEE(input_size, hidden_size, hidden_output_size, output_size)
-        elif(core_model == "ResCNN"):
-            self.BaseCNN = ResCNN(input_size, hidden_size, hidden_output_size, output_size)
-        else:
-            self.BaseCNN = BaseCNN(input_size, hidden_size, output_size)
-            self.BaseRNN = BaseRNN(hidden_size, hidden_size, self.CELL_TYPE).cuda()
-        
-        self.Discriminator = Discriminator(hidden_size, output_size)
-        
-        if(isCuda):
-            self.BaseCNN = self.BaseCNN.cuda()
-            self.Discriminator = self.Discriminator.cuda()
-        
+        self.BaseCNN = BaseCNN(input_size, hidden_size, output_size).cuda()
+        self.BaseRNN = BaseRNN(hidden_size, hidden_size, self.CELL_TYPE).cuda()
+        self.Discriminator = Discriminator(hidden_size, output_size).cuda()
         
     def initHidden(self, batch_size, weight_size, isCuda = True):
 
@@ -63,7 +49,6 @@ class snippet_cnnlstm(nn.Module):
                 h = torch.zeros(1, batch_size, weight_size)
                 
         return h
-
 
     def forward(self, X):
         
@@ -98,6 +83,7 @@ class snippet_cnnlstm(nn.Module):
                     if(tau_list[idx] < X[idx].shape[0]-1):
                         tau_list[idx]+=1
                 S_t = hidden[0][-1]
+
             elif(self.CORE == "CNNLSTM-500"):
                 S_t = self.BaseCNN(cnn_input)
 
@@ -134,41 +120,27 @@ class snippet_cnnlstm(nn.Module):
         
         Hidden_states = []
         for t in range(max_length):
+
             slice_input = []
             cnn_input = None # cpu
+
             for idx, x in enumerate(X):
-                #print(x.shape)
                 slice_input.append(torch.from_numpy(x[t,:,:]).float())
                 cnn_input = torch.stack(slice_input, dim=0)
             
             if(self.isCuda):
                 cnn_input = cnn_input.cuda()
 
-            if(self.CORE == "CNNLSTM"):
-                S_t = self.BaseCNN(cnn_input)
-                cnn_input.detach()
-                S_t = S_t.unsqueeze(0)
+            S_t = self.BaseCNN(cnn_input)
+            
+            cnn_input.detach()
+            
+            S_t = S_t.unsqueeze(0)
 
-                S_t, hidden = self.BaseRNN(S_t,hidden) # Run sequence model
+            S_t, hidden = self.BaseRNN(S_t,hidden) # Run sequence model
 
-                S_t = hidden[0][-1]
-            elif(self.CORE == "CNNLSTM-500"):
-                S_t = self.BaseCNN(cnn_input)
-                cnn_input.detach()
-                S_t = S_t.unsqueeze(0)
-
-                S_t, hidden = self.BaseRNN(S_t,hidden) # Run sequence model
-
-                S_t = hidden[0][-1]
-            else:
-                S_t = self.BaseCNN(cnn_input)
-                cnn_input.detach()
-                S_t = S_t.unsqueeze(0)
-
-                S_t, hidden = self.BaseRNN(S_t,hidden) # Run sequence model
-
-                S_t = hidden[0][-1]
-                
+            S_t = hidden[0][-1]
+            
             Hidden_states.append(S_t.cpu().detach().numpy())
             
         return Hidden_states
@@ -180,24 +152,11 @@ class snippet_cnnlstm(nn.Module):
         if(self.isCuda):
             cnn_input = cnn_input.cuda()
 
-        if(self.CORE == "CNNLSTM"):
-            S_t = self.BaseCNN(cnn_input)
-            cnn_input.detach()
-            S_t = S_t.unsqueeze(0)
-            S_t, hidden = self.BaseRNN(S_t,hidden) # Run sequence model
-            S_t = hidden[0][-1]
-        elif(self.CORE == "CNNLSTM-500"):
-            S_t = self.BaseCNN(cnn_input)
-            cnn_input.detach()
-            S_t = S_t.unsqueeze(0)
-            S_t, hidden = self.BaseRNN(S_t,hidden) # Run sequence model
-            S_t = hidden[0][-1]
-        else:
-            S_t = self.BaseCNN(cnn_input)
-            cnn_input.detach()
-            S_t = S_t.unsqueeze(0)
-            S_t, hidden = self.BaseRNN(S_t,hidden) # Run sequence model
-            S_t = hidden[0][-1]
+        S_t = self.BaseCNN(cnn_input)
+        cnn_input.detach()
+        S_t = S_t.unsqueeze(0)
+        S_t, hidden = self.BaseRNN(S_t,hidden) # Run sequence model
+        S_t = hidden[0][-1]
                 
         return S_t.cpu().detach().numpy(), hidden
 
