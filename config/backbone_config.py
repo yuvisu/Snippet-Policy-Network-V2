@@ -35,7 +35,7 @@ class Config():
     # path
     root_dir: str = ""
 
-    data_dir: str = "ECG"
+    data_dir: str = "ECG-data"
 
     snippet_dir: str = "snippet"
 
@@ -47,7 +47,7 @@ class Config():
         
     weight_dir: str = "weights"
 
-    output_dir: str = "eTSC"
+    output_dir: str = "Production"
 
     state_name: str = "state.pkl"
         

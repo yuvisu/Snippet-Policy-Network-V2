@@ -11,10 +11,10 @@ unzip TrainingSet1.zip
 unzip TrainingSet2.zip
 unzip TrainingSet3.zip
 cd ..
-python util/convert_ICBEB.py
-cp data/scp_statements.csv data/ICBEB/
+python utils/convert_ICBEB.py
+cp ECG-data/scp_statements.csv data/ICBEB/
 #make sure the file order as same as the paper
-cp data/icbeb_database.csv data/ICBEB/
+cp ECG-data/icbeb_database.csv data/ICBEB/
 
 ####################################
 #   GET PTBXL DATABASE
