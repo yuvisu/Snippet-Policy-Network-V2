@@ -1,6 +1,6 @@
 # Snippet Policy Network
 
-This repository is the official implementation of [Snippet Policy Network V2: Knee-Guided Neuroevolution for Multi-Lead ECG Early Classification](https://ieeexplore.ieee.org/document/9825701), published at IEEE Transactions on Neural Networks and Learning Systems. Feel free to contact me via this email (yuvisu.cs04g@nctu.edu.tw) if you get any problems.
+This repository is the official implementation of [Snippet Policy Network V2: Knee-Guided Neuroevolution for Multi-Lead ECG Early Classification](https://ieeexplore.ieee.org/document/9825701), published at IEEE Transactions on Neural Networks and Learning Systems. Feel free to contact me via this email (yh60@iu.edu) if you get any problems.
 
 
 ### Guideline:
